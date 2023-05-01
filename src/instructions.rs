@@ -22,7 +22,7 @@ static RL: Field = Field {width: 3, lsb: 25};
 static VL: Field = Field {width: 25, lsb: 0};
 
 /// Create a mask (all 1s) of `bits` bits
-fn mask(bits: u32) -> u32 { (1 << bits) - 1 }
+const fn mask(bits: u32) -> u32 { (1 << bits) - 1 }
 
 /// Given a `field` and `instruction`, extract
 /// that field from the instruction as a u32

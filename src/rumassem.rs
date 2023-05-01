@@ -14,7 +14,7 @@ pub struct Field {
 static OP: Field = Field {width: 4, lsb: 28};
 
 /// Create a mask (all 1s) of `bits` bits
-fn mask(bits: u32) -> u32 { (1 << bits) - 1 }
+const fn mask(bits: u32) -> u32 { (1 << bits) - 1 }
 
 /// Given a `field` and `instruction`, extract
 /// that field from the instruction as a u32
