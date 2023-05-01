@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 
+[profile.release]
+debug = true
+lto = true
