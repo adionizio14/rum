@@ -216,10 +216,8 @@ pub fn input(instruction: Umi, mut um: &mut UniMachine){
 /// takes in the instruction and universal machine
 /// runs the load value operator and updates the universal machine
 pub fn load_value(instruction: Umi, mut um: &mut UniMachine){
-    let a = get (&RL, instruction);
-    let value = get (&VL, instruction);
-
-    um.reg[a as usize] = value ;
+    let a = get (&RL, instruction) as usize;
+    um.reg[a] = get (&VL, instruction);
 
     um.counter += 1;
 
@@ -232,12 +230,10 @@ pub fn load_pro(instruction: Umi, mut um: &mut UniMachine){
     let b = get (&RB, instruction) as usize;
     let c = get (&RC, instruction) as usize;
 
-    let dup_seg = um.mem[um.reg[b] as usize].clone();
-    um.mem[0] = dup_seg;
+    um.mem[0]  = um.mem[um.reg[b] as usize].clone();
 
-    let pc =  um.reg[c];
 
-    um.counter = pc ;
+    um.counter = um.reg[c] ;
 
 }
 
