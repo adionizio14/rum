@@ -22,21 +22,21 @@ static RL: Field = Field {width: 3, lsb: 25};
 static VL: Field = Field {width: 25, lsb: 0};
 
 /// Create a mask (all 1s) of `bits` bits
-const fn mask(bits: u32) -> u32 { (1 << bits) - 1 }
+//const fn mask(bits: u32) -> u32 { (1 << bits) - 1 }
 
 /// Given a `field` and `instruction`, extract
 /// that field from the instruction as a u32
-pub fn get(field: &Field, instruction: Umi) -> u32 {
-    (instruction >> field.lsb) & mask(field.width)
-}
+/*pub fn get(field: &Field, instruction: Umi) -> u32 {
+    (instruction >> field.lsb) & ((1 << field.width) - 1)
+}*/
 
 /// takes in the instruction and universal machine
 /// runs the cmov operator and updates the universal machine
 pub fn cmov(instruction: Umi, mut um: &mut UniMachine){
 
-    let a = get (&RA, instruction) as usize;
-    let b = get (&RB, instruction) as usize;
-    let c = get (&RC, instruction) as usize;
+    let a = ((instruction >> RA.lsb) & ((1 << RA.width) - 1)) as usize ;
+    let b = ((instruction >> RB.lsb) & ((1 << RB.width) - 1)) as usize;
+    let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
     if um.reg[c] != 0 {
         um.reg[a] = um.reg[b];
@@ -49,9 +49,9 @@ pub fn cmov(instruction: Umi, mut um: &mut UniMachine){
 /// runs the segment load operator and updates the universal machine
 pub fn seg_load(instruction: Umi, mut um: &mut UniMachine){
 
-    let a = get (&RA, instruction) as usize;
-    let b = get (&RB, instruction) as usize;
-    let c = get (&RC, instruction) as usize;
+    let a = ((instruction >> RA.lsb) & ((1 << RA.width) - 1)) as usize ;
+    let b = ((instruction >> RB.lsb) & ((1 << RB.width) - 1)) as usize;
+    let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
     um.reg[a] = um.mem[um.reg[b] as usize][um.reg[c] as usize];
 
@@ -63,9 +63,9 @@ pub fn seg_load(instruction: Umi, mut um: &mut UniMachine){
 /// runs the segment store operator and updates the universal machine
 pub fn seg_store(instruction: Umi, mut um: &mut UniMachine){
 
-    let a = get (&RA, instruction) as usize;
-    let b = get (&RB, instruction) as usize;
-    let c = get (&RC, instruction) as usize;
+    let a = ((instruction >> RA.lsb) & ((1 << RA.width) - 1)) as usize ;
+    let b = ((instruction >> RB.lsb) & ((1 << RB.width) - 1)) as usize;
+    let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
     um.mem[um.reg[a] as usize][um.reg[b] as usize] = um.reg[c];
 
@@ -77,9 +77,9 @@ pub fn seg_store(instruction: Umi, mut um: &mut UniMachine){
 /// runs the add operator and updates the universal machine
 pub fn add(instruction: Umi, mut um: &mut UniMachine){
 
-    let a = get (&RA, instruction) as usize;
-    let b = get (&RB, instruction) as usize;
-    let c = get (&RC, instruction) as usize;
+    let a = ((instruction >> RA.lsb) & ((1 << RA.width) - 1)) as usize ;
+    let b = ((instruction >> RB.lsb) & ((1 << RB.width) - 1)) as usize;
+    let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
     let n = u64::pow(2, 32);
     um.reg[a] = ((um.reg[b] as u64 + um.reg[c] as u64) % n) as u32;
@@ -92,9 +92,9 @@ pub fn add(instruction: Umi, mut um: &mut UniMachine){
 /// runs the multiply operator and updates the universal machine
 pub fn mul(instruction: Umi, mut um: &mut UniMachine){
 
-    let a = get (&RA, instruction) as usize;
-    let b = get (&RB, instruction) as usize;
-    let c = get (&RC, instruction) as usize;
+    let a = ((instruction >> RA.lsb) & ((1 << RA.width) - 1)) as usize ;
+    let b = ((instruction >> RB.lsb) & ((1 << RB.width) - 1)) as usize;
+    let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
     let n = u64::pow(2, 32);
     um.reg[a] = ((um.reg[b] as u64 * um.reg[c] as u64) % n) as u32;
@@ -107,9 +107,9 @@ pub fn mul(instruction: Umi, mut um: &mut UniMachine){
 /// runs the divide operator and updates the universal machine
 pub fn div(instruction: Umi, mut um: &mut UniMachine){
 
-    let a = get (&RA, instruction) as usize;
-    let b = get (&RB, instruction) as usize;
-    let c = get (&RC, instruction) as usize;
+    let a = ((instruction >> RA.lsb) & ((1 << RA.width) - 1)) as usize ;
+    let b = ((instruction >> RB.lsb) & ((1 << RB.width) - 1)) as usize;
+    let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
     um.reg[a] = um.reg[b] / um.reg[c];
 
@@ -121,9 +121,9 @@ pub fn div(instruction: Umi, mut um: &mut UniMachine){
 /// runs the NAND operator and updates the universal machine
 pub fn nand(instruction: Umi, mut um: &mut UniMachine){
 
-    let a = get (&RA, instruction) as usize;
-    let b = get (&RB, instruction) as usize;
-    let c = get (&RC, instruction) as usize;
+    let a = ((instruction >> RA.lsb) & ((1 << RA.width) - 1)) as usize ;
+    let b = ((instruction >> RB.lsb) & ((1 << RB.width) - 1)) as usize;
+    let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
     let and = um.reg[b]  & um.reg[c] ;
     let nand = !and ;
@@ -143,8 +143,9 @@ pub fn halt() {
 /// runs the map segment operator and updates the universal machine
 pub fn map_seg (instruction: Umi, mut um: &mut UniMachine) {
 
-    let b = get (&RB, instruction) as usize;
-    let c = get (&RC, instruction) as usize;
+
+    let b = ((instruction >> RB.lsb) & ((1 << RB.width) - 1)) as usize;
+    let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
     let new_seg = vec![0; um.reg[c] as usize];
 
@@ -170,7 +171,8 @@ pub fn map_seg (instruction: Umi, mut um: &mut UniMachine) {
 /// runs the unmapped segment operator and updates the universal machine
 pub fn unmap_seg (instruction: Umi, um: &mut UniMachine) {
 
-    let c = get (&RC, instruction) as usize;
+
+    let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
     um.mem[um.reg[c] as usize].clear();
 
@@ -184,7 +186,7 @@ pub fn unmap_seg (instruction: Umi, um: &mut UniMachine) {
 /// runs the output operator and outputs register C to terminal
 pub fn output(instruction: Umi, mut um: &mut UniMachine){
 
-    let c = get (&RC, instruction) as usize;
+    let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
     print!("{}", char::from_u32(um.reg[c]).unwrap());
 
@@ -196,7 +198,7 @@ pub fn output(instruction: Umi, mut um: &mut UniMachine){
 /// and updates universal machine
 pub fn input(instruction: Umi, mut um: &mut UniMachine){
 
-    let c = get (&RC, instruction) as usize;
+    let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
     let mut buf: [u8;1] = [0];
     let char = stdin().read(&mut buf);
 
@@ -216,8 +218,9 @@ pub fn input(instruction: Umi, mut um: &mut UniMachine){
 /// takes in the instruction and universal machine
 /// runs the load value operator and updates the universal machine
 pub fn load_value(instruction: Umi, mut um: &mut UniMachine){
-    let a = get (&RL, instruction) as usize;
-    um.reg[a] = get (&VL, instruction);
+    let a = ((instruction >> RL.lsb) & ((1 << RL.width) - 1)) as usize ;
+
+    um.reg[a] = (instruction >> VL.lsb) & ((1 << VL.width) - 1);
 
     um.counter += 1;
 
@@ -227,8 +230,9 @@ pub fn load_value(instruction: Umi, mut um: &mut UniMachine){
 /// runs the load program operator and updates the universal machine
 pub fn load_pro(instruction: Umi, mut um: &mut UniMachine){
 
-    let b = get (&RB, instruction) as usize;
-    let c = get (&RC, instruction) as usize;
+
+    let b = ((instruction >> RB.lsb) & ((1 << RB.width) - 1)) as usize;
+    let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
     um.mem[0]  = um.mem[um.reg[b] as usize].clone();
 

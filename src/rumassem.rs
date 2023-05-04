@@ -19,7 +19,7 @@ const fn mask(bits: u32) -> u32 { (1 << bits) - 1 }
 /// Given a `field` and `instruction`, extract
 /// that field from the instruction as a u32
 pub fn get(field: &Field, instruction: Umi) -> u32 {
-    (instruction >> field.lsb) & mask(field.width)
+    (instruction >> field.lsb) & ((1 << field.width) - 1)
 }
 
 /// Given an instruction word, extract the opcode
