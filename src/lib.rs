@@ -19,6 +19,7 @@ enum Opcode {
     LoadVel = 13,
 }
 
+
 #[derive(Clone, Debug)]
 pub struct UniMachine {
 
