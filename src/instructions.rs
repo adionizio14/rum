@@ -30,6 +30,7 @@ static VL: Field = Field {width: 25, lsb: 0};
     (instruction >> field.lsb) & ((1 << field.width) - 1)
 }*/
 
+
 /// takes in the instruction and universal machine
 /// runs the cmov operator and updates the universal machine
 pub fn cmov(instruction: Umi, mut um: &mut UniMachine){
@@ -139,6 +140,10 @@ pub fn halt() {
     std::process::exit(0x0100);
 }
 
+fn pop_unmapped(um: &mut UniMachine) -> Option<u32> {
+    um.unmapped.pop()
+}
+
 /// takes in the instruction and universal machine
 /// runs the map segment operator and updates the universal machine
 pub fn map_seg (instruction: Umi, mut um: &mut UniMachine) {
@@ -149,18 +154,15 @@ pub fn map_seg (instruction: Umi, mut um: &mut UniMachine) {
 
     let new_seg = vec![0; um.reg[c] as usize];
 
-    if um.unmapped.len() > 0 {
-
-        let num = um.unmapped.pop().unwrap();
-        um.reg[b] = num;
-        um.mem[um.reg[b] as usize] = new_seg;
-
-    }
-    else {
-
-        um.mem.push(new_seg);
-        um.reg[b] = (um.mem.len() - 1) as u32;
-
+    match pop_unmapped(&mut um) {
+        Some(num) => {
+            um.reg[b] = num;
+            um.mem[um.reg[b] as usize] = new_seg;
+        }
+        None => {
+            um.mem.push(new_seg);
+            um.reg[b] = (um.mem.len() - 1) as u32;
+        }
     }
 
     um.counter += 1;
