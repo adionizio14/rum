@@ -32,45 +32,59 @@ pub fn assemble(inst: Umi, um: &mut UniMachine) {
     match get(&OP, inst) {
 
         o if o == Opcode::CMov as u32 => {
+            //println!("{}", o);
             cmov(inst, um);
         },
         o if o == Opcode::SegLoad as u32 => {
+            //println!("{}", o);
             seg_load(inst, um);
         }
         o if o == Opcode::SegStore as u32 => {
+            //println!("{}", o);
             seg_store(inst, um);
         }
         o if o == Opcode::Add as u32 => {
+            //println!("{}", o);
             add(inst, um);
         }
         o if o == Opcode::Mul as u32 => {
+            //println!("{}", o);
             mul(inst, um);
         }
         o if o == Opcode::Div as u32 => {
+            //println!("{}", o);
             div(inst, um);
         }
         o if o == Opcode::Nand as u32 => {
+            //println!("{}", o);
             nand(inst, um);
         }
         o if o == Opcode::Halt as u32 => {
+            //println!("{}", o);
             halt();
         }
         o if o == Opcode::MapSeg as u32 => {
+            //println!("{}", o);
             map_seg(inst, um);
         }
         o if o == Opcode::UnmapSeg as u32 => {
+            //println!("{}", o);
             unmap_seg(inst,um);
         }
         o if o == Opcode::Output as u32 => {
+            //println!("{}", o);
             output(inst, um);
         }
         o if o == Opcode::Input as u32 => {
+            //println!("{}", o);
             input(inst,um);
         }
-        o if o == Opcode::LoadPro as u32 => {
+        o if o == Opcode::LoadPro as u32 => unsafe {
+            //println!("{}", o);
            load_pro(inst,um);
         }
         o if o == Opcode::LoadVel as u32 => {
+            //println!("{}", o);
             load_value(inst, um);
         }
         _ => {
