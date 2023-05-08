@@ -99,8 +99,10 @@ pub fn mul(instruction: Umi, mut um: &mut UniMachine){
     let b = ((instruction >> RB.lsb) & ((1 << RB.width) - 1)) as usize;
     let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
-    let n = u64::pow(2, 32);
-    um.reg[a] = ((um.reg[b] as u64 * um.reg[c] as u64) % n) as u32;
+    let n = 1u64 << 32;
+    let add = um.reg[b] as u64 * um.reg[c] as u64;
+
+    um.reg[a] = (add % n) as u32;
 
     um.counter += 1;
 
