@@ -126,10 +126,7 @@ pub fn nand(instruction: Umi, mut um: &mut UniMachine){
     let b = ((instruction >> RB.lsb) & ((1 << RB.width) - 1)) as usize;
     let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
-    let and = um.reg[b]  & um.reg[c] ;
-    let nand = !and ;
-
-    um.reg[a] = nand;
+    um.reg[a] = !(um.reg[b] & um.reg[c]);
 
     um.counter += 1;
 }
@@ -242,6 +239,3 @@ pub fn load_pro(instruction: Umi, mut um: &mut UniMachine){
     um.counter = um.reg[c] ;
 
 }
-
-
-
