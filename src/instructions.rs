@@ -227,13 +227,23 @@ pub fn load_value(instruction: Umi, mut um: &mut UniMachine){
 
 /// takes in the instruction and universal machine
 /// runs the load program operator and updates the universal machine
-pub fn load_pro(instruction: Umi, mut um: &mut UniMachine){
+pub unsafe fn load_pro(instruction: Umi, mut um: &mut UniMachine){
 
 
     let b = ((instruction >> RB.lsb) & ((1 << RB.width) - 1)) as usize;
     let c = ((instruction >> RC.lsb) & ((1 << RC.width) - 1)) as usize;
 
-    um.mem[0]  = um.mem[um.reg[b] as usize].clone();
+    let src_addr = um.reg[b] as usize;
+    let dest_addr = 0;
+
+    // Copy memory block using pointer
+    let src_ptr = um.mem.as_ptr().add(src_addr);
+    let dest_ptr = um.mem.as_mut_ptr().add(dest_addr);
+    unsafe {
+        std::ptr::copy_nonoverlapping(src_ptr, dest_ptr, um.mem.len());
+    }
+
+    um.counter = um.reg[c];
 
 
     um.counter = um.reg[c] ;
